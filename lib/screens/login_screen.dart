@@ -1,3 +1,4 @@
+import 'package:client/settings/secure_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -15,7 +16,6 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final storage = FlutterSecureStorage();
 
   void _login(GraphQLClient client) async {
     final String email = _emailController.text.trim();
@@ -46,7 +46,9 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    await storage.write(key: "userEmail", value: data['userEmail']);
+    await SecureStorageHelper().write(StorageKeys().userKey, data.toString());
+    
+    
 
     Navigator.pushReplacement(
       context,
@@ -68,26 +70,37 @@ class _LoginScreenState extends State<LoginScreen> {
         return GraphQLProvider(
           client: ValueNotifier(client),
           child: Scaffold(
-            appBar: AppBar(title: Text("Login")),
-            body: Padding(
-              padding: EdgeInsets.all(16),
-              child: Column(
-                children: [
-                  TextField(
+            body: Center(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 300),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  spacing: 10,
+                  children: [
+                    Text("Login"),
+                    TextField(
                       controller: _emailController,
                       decoration: InputDecoration(
-                          labelText: "Email",
-                          border: OutlineInputBorder(),
+                        labelText: "Email",
+                        border: OutlineInputBorder(),
                       ),
-
-                  ),
-                  TextField(controller: _passwordController, decoration: InputDecoration(labelText: "Password"), obscureText: true),
-                  SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () => _login(client),
-                    child: Text("Login"),
-                  ),
-                ],
+                    ),
+                    TextField(
+                        controller: _passwordController,
+                        decoration: InputDecoration(
+                          labelText: "Password",
+                          border: OutlineInputBorder(),
+                        ),
+                        obscureText: true),
+                    SizedBox(height: 20),
+                    MaterialButton(
+                      minWidth: 200,
+                      color: Colors.blue,
+                      onPressed: () => _login(client),
+                      child: Text("Login"),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

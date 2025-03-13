@@ -1,4 +1,6 @@
+import 'package:client/screens/home_screen.dart';
 import 'package:client/screens/login_screen.dart';
+import 'package:client/settings/secure_storage.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -15,7 +17,6 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         ),
-        home: LoginScreen()
-    );
+        home: token != null ? HomeScreen() : LoginScreen());
   }
 }

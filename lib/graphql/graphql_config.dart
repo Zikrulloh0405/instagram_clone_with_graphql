@@ -1,13 +1,12 @@
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:client/settings/secure_storage.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
-const String apiUrl = "http://localhost:4000/graphql"; // Update if needed
+const String apiUrl = "http://localhost:4000/graphql";
 
 final HttpLink httpLink = HttpLink(apiUrl);
-const storage = FlutterSecureStorage();
 
 Future<GraphQLClient> initGraphQLClient() async {
-  final String? token = await storage.read(key: "token");
+  token = await SecureStorageHelper().read(StorageKeys().tokenKey);
 
   final AuthLink authLink = AuthLink(
     getToken: () async => token != null ? 'Bearer $token' : null,
